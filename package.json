@@ -3,7 +3,10 @@
     "version": "0.1.0",
     "description": "A place to store code snippets locally.",
     "keywords": [
-        "snippets", "store", "app", "express"
+        "snippets",
+        "store",
+        "app",
+        "express"
     ],
     "main": "./server/index.js",
     "scripts": {
@@ -22,5 +25,6 @@
     },
     "bugs": {
         "url": "https://github.com/prvnbist/snippify/issues"
-    }
+    },
+    "dependencies": {}
 }
