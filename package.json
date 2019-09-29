@@ -1,0 +1,26 @@
+{
+    "name": "snippify",
+    "version": "0.1.0",
+    "description": "A place to store code snippets locally.",
+    "keywords": [
+        "snippets", "store", "app", "express"
+    ],
+    "main": "./server/index.js",
+    "scripts": {
+        "start": "cd server && npm start",
+        "dev:client": "cd client && npm start",
+        "dev:server": "cd server && npm run dev"
+    },
+    "author": {
+        "name": "Praveen Bisht",
+        "url": "https://www.prvnbist.com"
+    },
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/prvnbist/snippify.git"
+    },
+    "bugs": {
+        "url": "https://github.com/prvnbist/snippify/issues"
+    }
+}
