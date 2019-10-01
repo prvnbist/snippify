@@ -46,7 +46,7 @@ const NavBar = () => {
 export default NavBar
 
 const NavWrapper = styled.nav`
-	border-right: 1px solid #000;
+	border-right: 1px solid #dedede;
 `
 
 const Panel = styled.div``
