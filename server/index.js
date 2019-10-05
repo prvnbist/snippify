@@ -46,20 +46,6 @@ app.post('/file', isFileAttached, (req, res) => {
 	})
 })
 
-// Update Files
-app.put('/file', isFileAttached, (req, res) => {
-	const { file } = req.files
-	const saveLocation = `${defaultLocation}/snippets/${
-		file.mimetype.split('/')[1]
-	}`
-	const savePath = `${saveLocation}/${file.name}`
-	fs.writeFile(savePath, file.data.toString(), err => {
-		if (err) throw err
-		res.status(200).send({ message: 'The file has been saved!' })
-	})
-})
-
-// TODO: Delete folder if empty after deleting files
 // Delete Files
 app.delete('/file', (req, res) => {
 	const filePath = `${defaultLocation}/snippets/${req.body.type}/${req.body.fileName}`
