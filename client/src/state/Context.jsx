@@ -10,7 +10,41 @@ const initialState = {
 		folder: '',
 		file: ''
 	},
-	openLabel: ''
+	openLabel: '',
+	languages: {
+		coffee: 'coffeescript',
+		h: 'objective-c',
+		bat: 'bat',
+		clj: 'clojure',
+		cpp: 'cpp',
+		cs: 'csharp',
+		csp: 'csp',
+		dockerfile: 'dockerfile',
+		fs: 'fsharp',
+		go: 'go',
+		graphql: 'graphql',
+		handlebars: 'handlebars',
+		html: 'html',
+		java: 'java',
+		js: 'javascript',
+		jsx: 'javascript',
+		lua: 'lua',
+		md: 'markdown',
+		php: 'php',
+		ps1: 'powershell',
+		pug: 'pug',
+		py: 'python',
+		r: 'r',
+		rb: 'ruby',
+		rs: 'rust',
+		swift: 'swift',
+		ts: 'typescript',
+		xml: 'xml',
+		yaml: 'yaml',
+		css: 'css',
+		less: 'less',
+		scss: 'scss'
+	}
 }
 
 const reducers = (state, action) => {

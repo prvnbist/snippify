@@ -56,7 +56,9 @@ const Main = () => {
 			</SectionHeader>
 			<Editor
 				height="100%"
-				language={`${state.openSnippet.file.split('.')[1]}`}
+				language={
+					state.languages[`${state.openSnippet.file.split('.')[1]}`]
+				}
 				value={content}
 				options={options}
 				editorDidMount={handleEditorDidMount}
