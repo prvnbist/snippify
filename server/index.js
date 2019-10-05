@@ -22,8 +22,8 @@ app.get('/files', (req, res) => {
 })
 
 app.get('/file', (req, res) => {
-	const { type, name } = req.query
-	const filePath = `${defaultLocation}/snippets/${type}/${name}`
+	const { folder, file } = req.query
+	const filePath = `${defaultLocation}/snippets/${folder}/${file}`
 	fs.readFile(filePath, (err, data) => {
 		if (err) return err
 		res.status(200).send({ file: data.toString() })

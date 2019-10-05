@@ -1,8 +1,10 @@
 import React from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
 
-import NavBar from './sections/NavBar'
+import LabelBar from './sections/LabelBar'
+import FileBar from './sections/FileBar'
 import Main from './sections/Main'
+import Header from './sections/Header'
 
 import { Context, initialState, reducers } from './state/Context'
 
@@ -20,11 +22,28 @@ const GlobalStyle = createGlobalStyle`
 
 const App = () => {
 	const [state, dispatch] = React.useReducer(reducers, initialState)
+	React.useEffect(() => {
+		fetch('/files')
+			.then(res => res.json())
+			.then(({ files: labels }) => {
+				dispatch({
+					type: 'SET_LABELS',
+					payload: labels
+				})
+				dispatch({
+					type: 'OPEN_LABEL',
+					payload: Object.keys(labels)[0]
+				})
+			})
+			.catch(err => console.log(err))
+	}, [])
 	return (
 		<Context.Provider value={{ state, dispatch }}>
 			<GlobalStyle />
 			<Wrapper>
-				<NavBar />
+				<Header />
+				<LabelBar />
+				<FileBar />
 				<Main />
 			</Wrapper>
 		</Context.Provider>
@@ -36,5 +55,9 @@ export default App
 const Wrapper = styled.div`
 	display: grid;
 	height: 100vh;
-	grid-template-columns: 240px 1fr;
+	grid-template-columns: 200px 300px 1fr;
+	grid-template-rows: 48px 1fr;
+	grid-template-areas:
+		'head head head'
+		'label file main';
 `

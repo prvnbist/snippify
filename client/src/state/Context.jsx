@@ -1,23 +1,38 @@
 import React from 'react'
+import { stat } from 'fs'
 
 const Context = React.createContext()
 
 const initialState = {
-	openSnippet: '',
-	newSnippet: ''
+	labels: {},
+	files: [],
+	openSnippet: {
+		folder: '',
+		file: ''
+	},
+	openLabel: ''
 }
 
 const reducers = (state, action) => {
 	switch (action.type) {
+		case 'SET_LABELS':
+			return {
+				...state,
+				labels: action.payload
+			}
 		case 'OPEN_SNIPPET':
 			return {
-				openSnippet: action.payload,
-				newSnippet: ''
+				...state,
+				openSnippet: {
+					folder: action.payload.folder,
+					file: action.payload.file
+				}
 			}
-		case 'NEW_SNIPPET':
+		case 'OPEN_LABEL':
 			return {
-				newSnippet: action.payload,
-				openSnippet: ''
+				...state,
+				openLabel: action.payload,
+				files: state.labels[action.payload]
 			}
 		default:
 			return state
