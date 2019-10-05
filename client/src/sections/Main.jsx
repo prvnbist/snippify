@@ -13,18 +13,21 @@ const Main = () => {
 	const [fileName, setFileName] = React.useState('')
 	const [file, setFile] = React.useState(null)
 	React.useEffect(() => {
-		if (state.selectedSnippet !== '') {
-			setFileName(state.selectedSnippet.split('/')[1])
+		if (state.openSnippet !== '') {
+			setFileName(state.openSnippet.split('/')[1])
 			fetch(
-				`/file?type=${state.selectedSnippet.split('/')[0]}&name=${
-					state.selectedSnippet.split('/')[1]
+				`/file?type=${state.openSnippet.split('/')[0]}&name=${
+					state.openSnippet.split('/')[1]
 				}`
 			)
 				.then(res => res.json())
 				.then(({ file }) => setFile(file))
 				.catch(err => console.log(err))
+		} else if (state.newSnippet !== '') {
+			setFileName(state.newSnippet.split('/')[1])
+			setFile('')
 		}
-	}, [state.selectedSnippet])
+	}, [state.openSnippet, state.newSnippet])
 
 	function handleEditorDidMount(_, editor) {
 		editorRef.current = editor
@@ -37,7 +40,7 @@ const Main = () => {
 		const formData = new FormData()
 		formData.append('file', file)
 		fetch('/file', {
-			method: 'PUT',
+			method: 'POST',
 			body: formData
 		})
 			.then(response => response.json())

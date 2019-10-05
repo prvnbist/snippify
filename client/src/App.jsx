@@ -13,6 +13,9 @@ const GlobalStyle = createGlobalStyle`
 		padding: 0;
 		font-family: "SF UI Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
 	}
+	body {
+		overflow: hidden;
+	}
 `
 
 const App = () => {
