@@ -41,7 +41,7 @@ const FileBar = () => {
 export default FileBar
 
 const FileBarWrapper = styled.aside`
-	background: #fbfbfb;
+	background: #f9ffff;
 	grid-area: file;
 	border-right: 1px solid #e1e1e1;
 `
@@ -52,7 +52,7 @@ const SectionHeader = styled.div`
 	align-items: center;
 	justify-content: space-between;
 	padding: 0 16px;
-	color: #c6b3b3;
+	color: #a28989;
 	font-size: 12px;
 	text-transform: uppercase;
 	font-weight: 400;
@@ -82,6 +82,6 @@ const PanelHeader = styled.header`
 	align-items: center;
 	cursor: pointer;
 	:hover {
-		background: #e7e7e7;
+		background: #d2ffff;
 	}
 `
