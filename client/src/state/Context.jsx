@@ -80,6 +80,21 @@ const reducers = (state, action) => {
 				labels: labels
 			}
 		}
+		case 'DELETE_SNIPPET': {
+			let labels = state.labels
+			const filtered = labels[action.payload.folder].filter(
+				file => file !== action.payload.file
+			)
+			labels = {
+				...labels,
+				[action.payload.folder]: filtered
+			}
+			return {
+				...state,
+				labels: labels,
+				files: filtered
+			}
+		}
 		case 'OPEN_LABEL':
 			return {
 				...state,

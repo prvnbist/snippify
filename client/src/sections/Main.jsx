@@ -57,7 +57,11 @@ const Main = () => {
 			.then(res => res.json())
 			.then(() =>
 				dispatch({
-					type: 'DELETE_SNIPPET'
+					type: 'DELETE_SNIPPET',
+					payload: {
+						folder: state.openSnippet.folder,
+						file: state.openSnippet.file
+					}
 				})
 			)
 			.catch(err => console.log(err))
