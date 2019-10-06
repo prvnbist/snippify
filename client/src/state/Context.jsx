@@ -70,6 +70,16 @@ const reducers = (state, action) => {
 					file: ''
 				}
 			}
+		case 'RENAME_SNIPPET': {
+			const labels = state.labels
+			const label = labels[action.payload.folder]
+			const index = label.indexOf(action.payload.file)
+			label[index] = action.payload.newName
+			return {
+				...state,
+				labels: labels
+			}
+		}
 		case 'OPEN_LABEL':
 			return {
 				...state,

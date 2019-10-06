@@ -56,6 +56,24 @@ app.delete('/file', (req, res) => {
 	})
 })
 
+// Rename File
+app.post('/renameSnippet', (req, res) => {
+	const { folder, file, newName } = req.body
+	const oldPath = `${defaultLocation}/snippets/${folder}/${file}`
+	const newPath = `${defaultLocation}/snippets/${folder}/${newName}`
+	fs.rename(oldPath, newPath, err => {
+		if (err)
+			return res.send({
+				success: false,
+				error: 'Can not rename!'
+			})
+		res.status(200).send({
+			success: true,
+			message: 'File renamed!'
+		})
+	})
+})
+
 app.get('*', (req, res) => {
 	res.sendFile(path.join(__dirname, '..', '/client/build/index.html'))
 })

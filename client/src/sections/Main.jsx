@@ -4,7 +4,7 @@ import Editor from '@monaco-editor/react'
 
 import { Context } from '../state/Context'
 
-import { EditIcon, TrashIcon, CloseIcon } from '../assets/Icons'
+import { EditIcon, TrashIcon, SaveIcon } from '../assets/Icons'
 
 const Main = () => {
 	const editorRef = React.useRef()
@@ -63,6 +63,30 @@ const Main = () => {
 			.catch(err => console.log(err))
 	}
 
+	const saveName = () => {
+		const formData = new FormData()
+		formData.append('folder', state.openSnippet.folder)
+		formData.append('file', state.openSnippet.file)
+		formData.append('newName', fileName)
+		fetch('/renameSnippet', {
+			method: 'POST',
+			body: formData
+		})
+			.then(res => res.json())
+			.then(() => {
+				setIsFileNameEditable(isFileNameEditable => !isFileNameEditable)
+				dispatch({
+					type: 'RENAME_SNIPPET',
+					payload: {
+						folder: state.openSnippet.folder,
+						file: state.openSnippet.file,
+						newName: fileName
+					}
+				})
+			})
+			.catch(err => console.log(err))
+	}
+
 	const options = {
 		readOnly: true,
 		minimap: {
@@ -73,7 +97,7 @@ const Main = () => {
 	return (
 		<MainWrapper>
 			<SectionHeader>
-				<FileName>
+				<FileName isFileNameEditable={isFileNameEditable}>
 					<IconBtn onClick={() => editName()}>
 						<EditIcon size={16} color={'#26ACB4'} />
 					</IconBtn>
@@ -83,6 +107,11 @@ const Main = () => {
 						disabled={!isFileNameEditable}
 						onChange={e => setFileName(e.target.value)}
 					/>
+					{isFileNameEditable && (
+						<IconBtn onClick={() => saveName()}>
+							<SaveIcon size={16} color={'#26ACB4'} />
+						</IconBtn>
+					)}
 				</FileName>
 				<IconBtn onClick={() => deleteSnippet()}>
 					<TrashIcon size={16} color={'#26ACB4'} />
@@ -124,14 +153,17 @@ const SectionHeader = styled.div`
 
 const FileName = styled.div`
 	display: grid;
-	grid-template-columns: 40px 1fr;
+	grid-template-columns: ${props =>
+		props.isFileNameEditable ? '40px 1fr 40px' : '40px 1fr'};
 	input {
 		height: 40px;
-		background: #ecfeff;
+		background: ${props => (props.isFileNameEditable ? '#fff' : '#ecfeff')};
 		border: 1px solid #c6f4f6;
 		border-left: none;
-		border-top-right-radius: 6px;
-		border-bottom-right-radius: 6px;
+		border-top-right-radius: ${props =>
+			props.isFileNameEditable ? '0' : '6px'};
+		border-bottom-right-radius: ${props =>
+			props.isFileNameEditable ? '0' : '6px'};
 		border-top-left-radius: 0px;
 		border-bottom-left-radius: 0px;
 		padding-left: 12px;
@@ -141,6 +173,13 @@ const FileName = styled.div`
 		border-bottom-left-radius: 6px;
 		border-top-right-radius: 0;
 		border-bottom-right-radius: 0;
+		:last-child {
+			border-left: none;
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+			border-top-right-radius: 6px;
+			border-bottom-right-radius: 6px;
+		}
 	}
 `
 
