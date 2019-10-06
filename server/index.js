@@ -48,7 +48,8 @@ app.post('/file', isFileAttached, (req, res) => {
 
 // Delete Files
 app.delete('/file', (req, res) => {
-	const filePath = `${defaultLocation}/snippets/${req.body.type}/${req.body.fileName}`
+	const { folder, file } = req.query
+	const filePath = `${defaultLocation}/snippets/${folder}/${file}`
 	fs.unlink(filePath, err => {
 		if (err) throw err
 		res.status(200).send({ message: 'File has been deleted' })
