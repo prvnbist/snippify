@@ -4,13 +4,14 @@ import Editor from '@monaco-editor/react'
 
 import { Context } from '../state/Context'
 
-import { EditIcon, TrashIcon, SaveIcon } from '../assets/Icons'
+import { EditIcon, TrashIcon, SaveIcon, ViewIcon } from '../assets/Icons'
 
 const Main = () => {
 	const editorRef = React.useRef()
 	const { state, dispatch } = React.useContext(Context)
 	const [content, setContent] = React.useState(null)
 	const [fileName, setFileName] = React.useState('')
+	const [isContentEditable, setIsContentEditable] = React.useState(false)
 	const [isFileNameEditable, setIsFileNameEditable] = React.useState(false)
 
 	React.useEffect(() => {
@@ -68,31 +69,40 @@ const Main = () => {
 	}
 
 	const saveName = () => {
-		const formData = new FormData()
-		formData.append('folder', state.openSnippet.folder)
-		formData.append('file', state.openSnippet.file)
-		formData.append('newName', fileName)
-		fetch('/renameSnippet', {
-			method: 'POST',
-			body: formData
-		})
-			.then(res => res.json())
-			.then(() => {
-				setIsFileNameEditable(isFileNameEditable => !isFileNameEditable)
-				dispatch({
-					type: 'RENAME_SNIPPET',
-					payload: {
-						folder: state.openSnippet.folder,
-						file: state.openSnippet.file,
-						newName: fileName
-					}
-				})
+		setIsFileNameEditable(isFileNameEditable => !isFileNameEditable)
+		if (state.openSnippet.file !== fileName) {
+			const formData = new FormData()
+			formData.append('folder', state.openSnippet.folder)
+			formData.append('file', state.openSnippet.file)
+			formData.append('newName', fileName)
+			fetch('/renameSnippet', {
+				method: 'POST',
+				body: formData
 			})
-			.catch(err => console.log(err))
+				.then(res => res.json())
+				.then(() => {
+					dispatch({
+						type: 'RENAME_SNIPPET',
+						payload: {
+							folder: state.openSnippet.folder,
+							file: state.openSnippet.file,
+							newName: fileName
+						}
+					})
+				})
+				.catch(err => console.log(err))
+		}
+	}
+
+	const viewMode = () => {
+		setIsContentEditable(false)
+	}
+	const editMode = () => {
+		setIsContentEditable(true)
 	}
 
 	const options = {
-		readOnly: true,
+		readOnly: !isContentEditable,
 		minimap: {
 			enabled: false
 		}
@@ -102,21 +112,37 @@ const Main = () => {
 		<MainWrapper>
 			<SectionHeader>
 				<FileName isFileNameEditable={isFileNameEditable}>
-					<IconBtn onClick={() => editName()}>
-						<EditIcon size={16} color={'#26ACB4'} />
-					</IconBtn>
+					{isFileNameEditable ? (
+						<IconBtn onClick={() => saveName()}>
+							<SaveIcon size={16} color={'#26ACB4'} />
+						</IconBtn>
+					) : (
+						<IconBtn onClick={() => editName()}>
+							<EditIcon size={16} color={'#26ACB4'} />
+						</IconBtn>
+					)}
+
 					<input
 						type="text"
 						value={fileName}
 						disabled={!isFileNameEditable}
 						onChange={e => setFileName(e.target.value)}
 					/>
-					{isFileNameEditable && (
-						<IconBtn onClick={() => saveName()}>
-							<SaveIcon size={16} color={'#26ACB4'} />
-						</IconBtn>
-					)}
 				</FileName>
+				<EditorModeSelector isContentEditable={isContentEditable}>
+					<IconBtn onClick={() => viewMode()}>
+						<ViewIcon
+							size={16}
+							color={isContentEditable ? '#26ACB4' : '#fff'}
+						/>
+					</IconBtn>
+					<IconBtn onClick={() => editMode()}>
+						<EditIcon
+							size={16}
+							color={isContentEditable ? '#fff' : '#26ACB4'}
+						/>
+					</IconBtn>
+				</EditorModeSelector>
 				<IconBtn onClick={() => deleteSnippet()}>
 					<TrashIcon size={16} color={'#26ACB4'} />
 				</IconBtn>
@@ -150,24 +176,21 @@ const SectionHeader = styled.div`
 	font-weight: 400;
 	border-bottom: 1px solid #e1e1e1;
 	display: grid;
-	grid-template-columns: 1fr 40px;
+	grid-template-columns: 1fr 80px 40px;
 	grid-column-gap: 12px;
 	align-items: center;
 `
 
 const FileName = styled.div`
 	display: grid;
-	grid-template-columns: ${props =>
-		props.isFileNameEditable ? '40px 1fr 40px' : '40px 1fr'};
+	grid-template-columns: 40px 1fr;
 	input {
 		height: 40px;
 		background: ${props => (props.isFileNameEditable ? '#fff' : '#ecfeff')};
 		border: 1px solid #c6f4f6;
 		border-left: none;
-		border-top-right-radius: ${props =>
-			props.isFileNameEditable ? '0' : '6px'};
-		border-bottom-right-radius: ${props =>
-			props.isFileNameEditable ? '0' : '6px'};
+		border-top-right-radius: 6px;
+		border-bottom-right-radius: 6px;
 		border-top-left-radius: 0px;
 		border-bottom-left-radius: 0px;
 		padding-left: 12px;
@@ -177,12 +200,27 @@ const FileName = styled.div`
 		border-bottom-left-radius: 6px;
 		border-top-right-radius: 0;
 		border-bottom-right-radius: 0;
+	}
+`
+
+const EditorModeSelector = styled.div`
+	button {
+		:first-child {
+			background: ${({ isContentEditable }) =>
+				isContentEditable ? '#ecfeff' : '#08AC98'};
+			border-top-left-radius: 6px;
+			border-bottom-left-radius: 6px;
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+			border-right: none;
+		}
 		:last-child {
-			border-left: none;
-			border-top-left-radius: 0;
-			border-bottom-left-radius: 0;
+			background: ${({ isContentEditable }) =>
+				isContentEditable ? '#08AC98' : '#ecfeff'};
 			border-top-right-radius: 6px;
 			border-bottom-right-radius: 6px;
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
 		}
 	}
 `
