@@ -25,8 +25,12 @@ app.get('/file', (req, res) => {
 	const { folder, file } = req.query
 	const filePath = `${defaultLocation}/snippets/${folder}/${file}`
 	fs.readFile(filePath, (err, data) => {
-		if (err) return err
-		res.status(200).send({ file: data.toString() })
+		if (err)
+			return res.status(404).send({
+				success: false,
+				message: `File ${file} doesn't exist!`
+			})
+		return res.status(200).send({ success: true, file: data.toString() })
 	})
 })
 
@@ -41,8 +45,14 @@ app.post('/file', isFileAttached, (req, res) => {
 		fs.mkdirSync(saveLocation, { recursive: true })
 	}
 	fs.writeFile(savePath, file.data.toString(), err => {
-		if (err) throw err
-		res.status(200).send({ message: 'The file has been saved!' })
+		if (err)
+			return res.status(404).send({
+				success: false,
+				message: `File ${file} doesn't exist!`
+			})
+		return res
+			.status(200)
+			.send({ success: true, message: 'File has been saved!' })
 	})
 })
 
@@ -51,8 +61,14 @@ app.delete('/file', (req, res) => {
 	const { folder, file } = req.query
 	const filePath = `${defaultLocation}/snippets/${folder}/${file}`
 	fs.unlink(filePath, err => {
-		if (err) throw err
-		res.status(200).send({ message: 'File has been deleted' })
+		if (err)
+			return res.status(404).send({
+				success: false,
+				message: `File ${file} doesn't exist!`
+			})
+		return res
+			.status(200)
+			.send({ success: true, message: 'File has been deleted!' })
 	})
 })
 
@@ -63,14 +79,13 @@ app.post('/renameSnippet', (req, res) => {
 	const newPath = `${defaultLocation}/snippets/${folder}/${newName}`
 	fs.rename(oldPath, newPath, err => {
 		if (err)
-			return res.send({
+			return res.status(404).send({
 				success: false,
-				error: 'Can not rename!'
+				message: `File ${file} doesn't exist!`
 			})
-		res.status(200).send({
-			success: true,
-			message: 'File renamed!'
-		})
+		return res
+			.status(200)
+			.send({ success: true, message: 'File has been renamed!' })
 	})
 })
 
