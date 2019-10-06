@@ -1,5 +1,4 @@
 import React from 'react'
-import { stat } from 'fs'
 
 const Context = React.createContext()
 
@@ -43,7 +42,8 @@ const initialState = {
 		yaml: 'yaml',
 		css: 'css',
 		less: 'less',
-		scss: 'scss'
+		scss: 'scss',
+		txt: 'text'
 	}
 }
 
@@ -60,6 +60,14 @@ const reducers = (state, action) => {
 				openSnippet: {
 					folder: action.payload.folder,
 					file: action.payload.file
+				}
+			}
+		case 'CLOSE_SNIPPET':
+			return {
+				...state,
+				openSnippet: {
+					folder: '',
+					file: ''
 				}
 			}
 		case 'OPEN_LABEL':
