@@ -2,9 +2,11 @@ import React from 'react'
 import styled from 'styled-components'
 import Editor from '@monaco-editor/react'
 
+import mime from 'mime-types'
+
 import { Context } from '../state/Context'
 
-import { EditIcon, TrashIcon, SaveIcon, ViewIcon } from '../assets/Icons'
+import { EditIcon, TrashIcon, SaveIcon } from '../assets/Icons'
 
 const Main = () => {
 	const editorRef = React.useRef()
@@ -31,8 +33,9 @@ const Main = () => {
 	}
 
 	const saveSnippet = () => {
-		const file = new File([editorRef.current.getValue()], 'index.js', {
-			type: 'application/javascript'
+		setIsContentEditable(isContentEditable => !isContentEditable)
+		const file = new File([editorRef.current.getValue()], fileName, {
+			type: mime.lookup(fileName)
 		})
 		const formData = new FormData()
 		formData.append('file', file)
@@ -94,13 +97,6 @@ const Main = () => {
 		}
 	}
 
-	const viewMode = () => {
-		setIsContentEditable(false)
-	}
-	const editMode = () => {
-		setIsContentEditable(true)
-	}
-
 	const options = {
 		readOnly: !isContentEditable,
 		minimap: {
@@ -129,19 +125,19 @@ const Main = () => {
 						onChange={e => setFileName(e.target.value)}
 					/>
 				</FileName>
-				<EditorModeSelector isContentEditable={isContentEditable}>
-					<IconBtn onClick={() => viewMode()}>
-						<ViewIcon
-							size={16}
-							color={isContentEditable ? '#26ACB4' : '#fff'}
-						/>
-					</IconBtn>
-					<IconBtn onClick={() => editMode()}>
-						<EditIcon
-							size={16}
-							color={isContentEditable ? '#fff' : '#26ACB4'}
-						/>
-					</IconBtn>
+				<EditorModeSelector editable={isContentEditable}>
+					{isContentEditable ? (
+						<TextBtn onClick={() => saveSnippet()}>Save</TextBtn>
+					) : (
+						<TextBtn
+							onClick={() =>
+								setIsContentEditable(
+									isContentEditable => !isContentEditable
+								)
+							}>
+							View
+						</TextBtn>
+					)}
 				</EditorModeSelector>
 				<IconBtn onClick={() => deleteSnippet()}>
 					<TrashIcon size={16} color={'#26ACB4'} />
@@ -176,7 +172,7 @@ const SectionHeader = styled.div`
 	font-weight: 400;
 	border-bottom: 1px solid #e1e1e1;
 	display: grid;
-	grid-template-columns: 1fr 80px 40px;
+	grid-template-columns: 1fr 60px 40px;
 	grid-column-gap: 12px;
 	align-items: center;
 `
@@ -205,25 +201,17 @@ const FileName = styled.div`
 
 const EditorModeSelector = styled.div`
 	button {
-		:first-child {
-			background: ${({ isContentEditable }) =>
-				isContentEditable ? '#ecfeff' : '#08AC98'};
-			border-top-left-radius: 6px;
-			border-bottom-left-radius: 6px;
-			border-top-right-radius: 0;
-			border-bottom-right-radius: 0;
-			border-right: none;
-		}
-		:last-child {
-			background: ${({ isContentEditable }) =>
-				isContentEditable ? '#08AC98' : '#ecfeff'};
-			border-top-right-radius: 6px;
-			border-bottom-right-radius: 6px;
-			border-top-left-radius: 0;
-			border-bottom-left-radius: 0;
-		}
+		width: 60px;
+		height: 40px;
+		cursor: pointer;
+		border-radius: 6px;
+		color: ${props => (props.editable ? '#fff' : '#5e4f4f')};
+		background: ${props => (props.editable ? '#08AC98' : '#ecfeff')};
+		border: ${props => (props.editable ? 'none' : '1px solid #c6f4f6')};
 	}
 `
+
+const TextBtn = styled.button``
 
 const IconBtn = styled.button`
 	height: 40px;
