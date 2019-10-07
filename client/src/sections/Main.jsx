@@ -39,13 +39,15 @@ const Main = () => {
 		})
 		const formData = new FormData()
 		formData.append('file', file)
-		fetch('/file', {
-			method: 'POST',
-			body: formData
-		})
-			.then(response => response.json())
-			.then(success => console.log(success))
-			.catch(error => console.log(error))
+		if (content !== editorRef.current.getValue()) {
+			fetch('/file', {
+				method: 'POST',
+				body: formData
+			})
+				.then(response => response.json())
+				.then(success => console.log(success))
+				.catch(error => console.log(error))
+		}
 	}
 
 	const editName = () => {
@@ -135,7 +137,7 @@ const Main = () => {
 									isContentEditable => !isContentEditable
 								)
 							}>
-							View
+							Edit
 						</TextBtn>
 					)}
 				</EditorModeSelector>
