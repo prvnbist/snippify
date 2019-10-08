@@ -49,6 +49,14 @@ const initialState = {
 
 const reducers = (state, action) => {
 	switch (action.type) {
+		case 'ADD_LABEL':
+			return {
+				...state,
+				labels: {
+					...state.labels,
+					[action.payload]: []
+				}
+			}
 		case 'SET_LABELS':
 			return {
 				...state,

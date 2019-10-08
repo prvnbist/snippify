@@ -35,7 +35,7 @@ app.get('/file', (req, res) => {
 })
 
 // Create Files
-app.post('/file', isFileAttached, (req, res) => {
+app.post('/saveSnippet', isFileAttached, (req, res) => {
 	const { file } = req.files
 	const saveLocation = `${defaultLocation}/snippets/${
 		file.mimetype.split('/')[1]
@@ -57,7 +57,7 @@ app.post('/file', isFileAttached, (req, res) => {
 })
 
 // Delete Files
-app.delete('/file', (req, res) => {
+app.delete('/deleteSnippet', (req, res) => {
 	const { folder, file } = req.query
 	const filePath = `${defaultLocation}/snippets/${folder}/${file}`
 	fs.unlink(filePath, err => {
@@ -86,6 +86,28 @@ app.post('/renameSnippet', (req, res) => {
 		return res
 			.status(200)
 			.send({ success: true, message: 'File has been renamed!' })
+	})
+})
+
+app.post('/createLabel', (req, res) => {
+	const { folder } = req.query
+	const folderPath = `${defaultLocation}/snippets/${folder}`
+	if (fs.existsSync(folderPath)) {
+		return res.send({
+			success: false,
+			message: `Folder ${folder} already exists!`
+		})
+	}
+	return fs.mkdir(folderPath, { recursive: true }, error => {
+		if (error)
+			return res.send({
+				success: false,
+				message: `Folder ${folder} could not be created!`
+			})
+		return res.send({
+			success: true,
+			message: `Label ${folder} has been created!`
+		})
 	})
 })
 

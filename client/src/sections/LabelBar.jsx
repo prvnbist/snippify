@@ -2,24 +2,71 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { Context } from '../state/Context'
+import Modal from '../components/Modal'
 
-import { AddIcon } from '../assets/Icons'
+import { AddIcon, CloseIcon } from '../assets/Icons'
 
 const LabelBar = () => {
 	const { state, dispatch } = React.useContext(Context)
+	const [labelName, setLableName] = React.useState('')
+	const [isModalVisible, setIsModalVisible] = React.useState(false)
 
-	const createLabel = () => {}
 	const openLabel = label =>
 		dispatch({
 			type: 'OPEN_LABEL',
 			payload: label
 		})
 
+	const createLabel = () => {
+		if (labelName !== '') {
+			fetch(`/createLabel?folder=${labelName}`, {
+				method: 'POST'
+			})
+				.then(response => response.json())
+				.then(result => {
+					setIsModalVisible(!isModalVisible)
+					dispatch({
+						type: 'ADD_LABEL',
+						payload: labelName
+					})
+					setLableName('')
+				})
+				.catch(console.log)
+		}
+	}
 	return (
 		<LabelBarWrapper>
+			{isModalVisible && (
+				<Modal>
+					<Modal.Header>
+						<span>Add Label</span>
+						<button
+							onClick={() => setIsModalVisible(!isModalVisible)}>
+							<CloseIcon size={16} color={'#909090'} />
+						</button>
+					</Modal.Header>
+					<Modal.Body>
+						<LabelInput
+							type="text"
+							value={labelName}
+							onChange={e => setLableName(e.target.value)}
+							placeholder="Enter the label name"
+						/>
+						<ButtonGroup>
+							<button onClick={() => createLabel()}>Save</button>
+							<button
+								onClick={() =>
+									setIsModalVisible(!isModalVisible)
+								}>
+								Cancel
+							</button>
+						</ButtonGroup>
+					</Modal.Body>
+				</Modal>
+			)}
 			<SectionHeader>
 				<span>labels</span>
-				<button onClick={() => createLabel()}>
+				<button onClick={() => setIsModalVisible(!isModalVisible)}>
 					<AddIcon size={16} color={'#909090'} />
 				</button>
 			</SectionHeader>
@@ -79,5 +126,36 @@ const PanelHeader = styled.header`
 	cursor: pointer;
 	:hover {
 		background: rgba(0, 0, 0, 0.2);
+	}
+`
+
+const LabelInput = styled.input`
+	width: 60%;
+	height: 40px;
+	background: #fff;
+	border: 1px solid #c6f4f6;
+	border-radius: 6px;
+	padding-left: 12px;
+`
+
+const ButtonGroup = styled.div`
+	margin-top: auto;
+	justify-self: flex-end;
+	button {
+		color: #fff;
+		border: none;
+		height: 32px;
+		padding: 0 12px;
+		cursor: pointer;
+		font-weight: 500;
+		line-height: 32px;
+		margin-right: 12px;
+		border-radius: 4px;
+		:first-child {
+			background: #08ac98;
+		}
+		:last-child {
+			background: red;
+		}
 	}
 `
