@@ -2,8 +2,8 @@ const express = require('express')
 const router = express.Router()
 const fs = require('fs')
 
-const { isFileAttached } = require('./utils/middlewares')
-const { getAllFiles } = require('./utils/files.js')
+const { isFileAttached } = require('../utils/middlewares')
+const { getAllFiles } = require('../utils/files.js')
 
 const defaultLocation = '../..'
 
