@@ -77,5 +77,8 @@ const ModalCard = styled.div`
 	}
 	main {
 		padding: 12px;
+		display: flex;
+		flex-direction: column;
+		height: calc(100% - 32px);
 	}
 `
