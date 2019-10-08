@@ -62,6 +62,14 @@ const reducers = (state, action) => {
 				...state,
 				labels: action.payload
 			}
+		case 'ADD_SNIPPET': {
+			let labels = state.labels
+			labels[action.payload.folder].push(action.payload.file)
+			return {
+				...state,
+				labels: labels
+			}
+		}
 		case 'OPEN_SNIPPET':
 			return {
 				...state,
