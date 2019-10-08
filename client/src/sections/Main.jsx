@@ -39,6 +39,7 @@ const Main = () => {
 		})
 		const formData = new FormData()
 		formData.append('file', file)
+		formData.append('folder', state.openLabel)
 		if (content !== editorRef.current.getValue()) {
 			fetch('/saveSnippet', {
 				method: 'POST',

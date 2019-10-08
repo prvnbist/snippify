@@ -37,9 +37,8 @@ app.get('/file', (req, res) => {
 // Create Files
 app.post('/saveSnippet', isFileAttached, (req, res) => {
 	const { file } = req.files
-	const saveLocation = `${defaultLocation}/snippets/${
-		file.mimetype.split('/')[1]
-	}`
+	const { folder } = req.body
+	const saveLocation = `${defaultLocation}/snippets/${folder}`
 	const savePath = `${saveLocation}/${file.name}`
 	if (!fs.existsSync(saveLocation)) {
 		fs.mkdirSync(saveLocation, { recursive: true })
