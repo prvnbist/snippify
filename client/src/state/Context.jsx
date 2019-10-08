@@ -57,6 +57,16 @@ const reducers = (state, action) => {
 					[action.payload]: []
 				}
 			}
+		case 'DELETE_LABEL': {
+			const labels = state.labels
+			delete labels[action.payload]
+			return {
+				...state,
+				labels: labels,
+				openLabel: '',
+				files: state.openLabel === action.payload ? [] : state.files
+			}
+		}
 		case 'SET_LABELS':
 			return {
 				...state,

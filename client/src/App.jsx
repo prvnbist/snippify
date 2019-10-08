@@ -30,10 +30,6 @@ const App = () => {
 					type: 'SET_LABELS',
 					payload: labels
 				})
-				dispatch({
-					type: 'OPEN_LABEL',
-					payload: Object.keys(labels)[0]
-				})
 			})
 			.catch(err => console.log(err))
 	}, [])

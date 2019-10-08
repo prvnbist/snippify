@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { Context } from '../state/Context'
 import Modal from '../components/Modal'
 
-import { AddIcon, CloseIcon } from '../assets/Icons'
+import { AddIcon, CloseIcon, TrashIcon } from '../assets/Icons'
 
 const LabelBar = () => {
 	const { state, dispatch } = React.useContext(Context)
@@ -34,6 +34,22 @@ const LabelBar = () => {
 				.catch(console.log)
 		}
 	}
+
+	const deleteLabel = (e, label) => {
+		e.stopPropagation()
+		fetch(`/deleteLabel?folder=${label}`, {
+			method: 'DELETE'
+		})
+			.then(res => res.json())
+			.then(() =>
+				dispatch({
+					type: 'DELETE_LABEL',
+					payload: label
+				})
+			)
+			.catch(err => console.log(err))
+	}
+
 	return (
 		<LabelBarWrapper>
 			{isModalVisible && (
@@ -74,6 +90,9 @@ const LabelBar = () => {
 				<Panel key={label}>
 					<PanelHeader onClick={() => openLabel(label)}>
 						<span>{label}</span>
+						<button onClick={e => deleteLabel(e, label)}>
+							<TrashIcon size={16} color={'#909090'} />
+						</button>
 					</PanelHeader>
 				</Panel>
 			))}
@@ -124,6 +143,17 @@ const PanelHeader = styled.header`
 	justify-content: space-between;
 	align-items: center;
 	cursor: pointer;
+	button {
+		background: transparent;
+		cursor: pointer;
+		border: none;
+		height: 16px;
+		width: 16px;
+		visibility: hidden;
+	}
+	:hover button {
+		visibility: visible;
+	}
 	:hover {
 		background: rgba(0, 0, 0, 0.2);
 	}

@@ -48,7 +48,8 @@ const FileBar = () => {
 				.catch(error => console.log(error))
 		}
 	}
-
+	if (state.openLabel === '')
+		return <FileBarWrapper>Select a label</FileBarWrapper>
 	return (
 		<FileBarWrapper>
 			{isModalVisible && (

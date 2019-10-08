@@ -2,6 +2,8 @@ const fileUpload = require('express-fileupload')
 const express = require('express')
 const path = require('path')
 const fs = require('fs')
+const rimraf = require('rimraf')
+
 const app = express()
 
 const { isFileAttached } = require('./utils/middlewares')
@@ -106,6 +108,21 @@ app.post('/createLabel', (req, res) => {
 		return res.send({
 			success: true,
 			message: `Label ${folder} has been created!`
+		})
+	})
+})
+
+app.delete('/deleteLabel', (req, res) => {
+	const { folder } = req.query
+	const folderPath = `${defaultLocation}/snippets/${folder}`
+	return rimraf(folderPath, error => {
+		if(error) return res.status(400).send({
+			success: false,
+			message: `Could not delete ${folder} folder!`
+		})
+		return res.status(200).send({
+			success: true,
+			message: `Folder ${folder} deleted successfully!`
 		})
 	})
 })
