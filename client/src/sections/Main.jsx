@@ -40,7 +40,7 @@ const Main = () => {
 		const formData = new FormData()
 		formData.append('file', file)
 		if (content !== editorRef.current.getValue()) {
-			fetch('/file', {
+			fetch('/saveSnippet', {
 				method: 'POST',
 				body: formData
 			})
@@ -56,7 +56,7 @@ const Main = () => {
 
 	const deleteSnippet = () => {
 		setFileName('')
-		const URL = `/file?folder=${state.openSnippet.folder}&file=${state.openSnippet.file}`
+		const URL = `/deleteSnippet?folder=${state.openSnippet.folder}&file=${state.openSnippet.file}`
 		fetch(URL, {
 			method: 'DELETE'
 		})
