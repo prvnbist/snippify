@@ -49,7 +49,13 @@ const FileBar = () => {
 		}
 	}
 	if (state.openLabel === '')
-		return <FileBarWrapper>Select a label</FileBarWrapper>
+		return (
+			<FileBarWrapper>
+				<EmptyState>
+					<span>Select a Label</span>
+				</EmptyState>
+			</FileBarWrapper>
+		)
 	return (
 		<FileBarWrapper>
 			{isModalVisible && (
@@ -177,4 +183,13 @@ const ButtonGroup = styled.div`
 			background: red;
 		}
 	}
+`
+
+const EmptyState = styled.div`
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: ${props => props.color};
 `

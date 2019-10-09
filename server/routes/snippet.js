@@ -1,19 +1,27 @@
-const express = require('express');
-const fs = require('fs');
+const express = require('express')
+const fs = require('fs')
 
-const router = new express.Router();
+const router = new express.Router()
 
 const { isFileAttached } = require('../utils/middlewares')
 const { getAllFiles } = require('../utils/files.js')
-
 
 const defaultLocation = '..'
 
 // Get list of all files
 router.get('/files', (req, res) => {
-	return getAllFiles(`${defaultLocation}/snippets`).then(files =>
-		res.send({ files })
-	).catch(error => res.status(400).send(error))
+	const location = `${defaultLocation}/snippets`
+	if (!fs.existsSync(location)) {
+		fs.mkdirSync(location, { recursive: true })
+	}
+	return getAllFiles(location)
+		.then(files => res.send({ files }))
+		.catch(error =>
+			res.status(400).send({
+				success: false,
+				message: `${new Error(error)}`
+			})
+		)
 })
 
 router.get('/file', (req, res) => {
@@ -83,4 +91,4 @@ router.post('/rename', (req, res) => {
 	})
 })
 
-module.exports = router;
+module.exports = router

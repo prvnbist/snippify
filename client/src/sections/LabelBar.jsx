@@ -49,7 +49,6 @@ const LabelBar = () => {
 			)
 			.catch(err => console.log(err))
 	}
-
 	return (
 		<LabelBarWrapper>
 			{isModalVisible && (
@@ -86,16 +85,22 @@ const LabelBar = () => {
 					<AddIcon size={16} color={'#909090'} />
 				</button>
 			</SectionHeader>
-			{Object.keys(state.labels).map(label => (
-				<Panel key={label}>
-					<PanelHeader onClick={() => openLabel(label)}>
-						<span>{label}</span>
-						<button onClick={e => deleteLabel(e, label)}>
-							<TrashIcon size={16} color={'#909090'} />
-						</button>
-					</PanelHeader>
-				</Panel>
-			))}
+			{Object.keys(state.labels).length !== 0 ? (
+				Object.keys(state.labels).map(label => (
+					<Panel key={label}>
+						<PanelHeader onClick={() => openLabel(label)}>
+							<span>{label}</span>
+							<button onClick={e => deleteLabel(e, label)}>
+								<TrashIcon size={16} color={'#909090'} />
+							</button>
+						</PanelHeader>
+					</Panel>
+				))
+			) : (
+				<EmptyState color={'#fff'}>
+					<span>Create a Label</span>
+				</EmptyState>
+			)}
 		</LabelBarWrapper>
 	)
 }
@@ -188,4 +193,13 @@ const ButtonGroup = styled.div`
 			background: red;
 		}
 	}
+`
+
+const EmptyState = styled.div`
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: ${props => props.color};
 `

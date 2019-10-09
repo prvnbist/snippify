@@ -106,7 +106,14 @@ const Main = () => {
 			enabled: false
 		}
 	}
-	if (fileName === '') return <MainWrapper>Select a file</MainWrapper>
+	if (fileName === '')
+		return (
+			<MainWrapper>
+				<EmptyState>
+					<span>Select a File</span>
+				</EmptyState>
+			</MainWrapper>
+		)
 	return (
 		<MainWrapper>
 			<SectionHeader>
@@ -223,4 +230,13 @@ const IconBtn = styled.button`
 	border: 1px solid #c6f4f6;
 	border-radius: 6px;
 	cursor: pointer;
+`
+
+const EmptyState = styled.div`
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: ${props => props.color};
 `
