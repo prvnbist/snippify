@@ -23,6 +23,9 @@ app.get('/files', (req, res) => {
 	)
 })
 
+//Rotas
+app.use('/', require('./routes/routes.js'))
+
 app.get('/file', (req, res) => {
 	const { folder, file } = req.query
 	const filePath = `${defaultLocation}/snippets/${folder}/${file}`
@@ -116,10 +119,11 @@ app.delete('/deleteLabel', (req, res) => {
 	const { folder } = req.query
 	const folderPath = `${defaultLocation}/snippets/${folder}`
 	return rimraf(folderPath, error => {
-		if(error) return res.status(400).send({
-			success: false,
-			message: `Could not delete ${folder} folder!`
-		})
+		if (error)
+			return res.status(400).send({
+				success: false,
+				message: `Could not delete ${folder} folder!`
+			})
 		return res.status(200).send({
 			success: true,
 			message: `Folder ${folder} deleted successfully!`
