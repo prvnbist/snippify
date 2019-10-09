@@ -20,7 +20,7 @@ const Main = () => {
 		if (state.openSnippet.folder !== '') {
 			setFileName(state.openSnippet.file)
 			fetch(
-				`/file?folder=${state.openSnippet.folder}&file=${state.openSnippet.file}`
+				`/snippet/file?folder=${state.openSnippet.folder}&file=${state.openSnippet.file}`
 			)
 				.then(res => res.json())
 				.then(({ file }) => setContent(file))
@@ -41,7 +41,7 @@ const Main = () => {
 		formData.append('file', file)
 		formData.append('folder', state.openLabel)
 		if (content !== editorRef.current.getValue()) {
-			fetch('/saveSnippet', {
+			fetch('/snippet/save', {
 				method: 'POST',
 				body: formData
 			})
@@ -57,7 +57,7 @@ const Main = () => {
 
 	const deleteSnippet = () => {
 		setFileName('')
-		const URL = `/deleteSnippet?folder=${state.openSnippet.folder}&file=${state.openSnippet.file}`
+		const URL = `/snippet/delete?folder=${state.openSnippet.folder}&file=${state.openSnippet.file}`
 		fetch(URL, {
 			method: 'DELETE'
 		})
@@ -81,7 +81,7 @@ const Main = () => {
 			formData.append('folder', state.openSnippet.folder)
 			formData.append('file', state.openSnippet.file)
 			formData.append('newName', fileName)
-			fetch('/renameSnippet', {
+			fetch('/snippet/rename', {
 				method: 'POST',
 				body: formData
 			})

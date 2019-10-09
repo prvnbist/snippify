@@ -7,7 +7,7 @@ const router = new express.Router();
 
 const defaultLocation = '..'
 
-router.post('/createLabel', (req, res) => {
+router.post('/create', (req, res) => {
 	const { folder } = req.query
 	const folderPath = `${defaultLocation}/snippets/${folder}`
 	if (fs.existsSync(folderPath)) {
@@ -29,7 +29,7 @@ router.post('/createLabel', (req, res) => {
 	})
 })
 
-router.delete('/deleteLabel', (req, res) => {
+router.delete('/delete', (req, res) => {
 	const { folder } = req.query
 	const folderPath = `${defaultLocation}/snippets/${folder}`
 	return rimraf(folderPath, error => {

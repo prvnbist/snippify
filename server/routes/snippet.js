@@ -6,6 +6,7 @@ const router = new express.Router();
 const { isFileAttached } = require('../utils/middlewares')
 const { getAllFiles } = require('../utils/files.js')
 
+
 const defaultLocation = '..'
 
 // Get list of all files
@@ -29,7 +30,7 @@ router.get('/file', (req, res) => {
 })
 
 // Create Files
-router.post('/saveSnippet', isFileAttached, (req, res) => {
+router.post('/save', isFileAttached, (req, res) => {
 	const { file } = req.files
 	const { folder } = req.body
 	const saveLocation = `${defaultLocation}/snippets/${folder}`
@@ -50,7 +51,7 @@ router.post('/saveSnippet', isFileAttached, (req, res) => {
 })
 
 // Delete Files
-router.delete('/deleteSnippet', (req, res) => {
+router.delete('/delete', (req, res) => {
 	const { folder, file } = req.query
 	const filePath = `${defaultLocation}/snippets/${folder}/${file}`
 	fs.unlink(filePath, err => {
@@ -66,7 +67,7 @@ router.delete('/deleteSnippet', (req, res) => {
 })
 
 // Rename File
-router.post('/renameSnippet', (req, res) => {
+router.post('/rename', (req, res) => {
 	const { folder, file, newName } = req.body
 	const oldPath = `${defaultLocation}/snippets/${folder}/${file}`
 	const newPath = `${defaultLocation}/snippets/${folder}/${newName}`

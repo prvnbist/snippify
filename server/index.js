@@ -10,12 +10,11 @@ app.use(fileUpload())
 app.use(express.static(path.join(__dirname, '..', '/client/build')))
 
 // Routers
-const labelRouter = require('./routes/label');
-const snippetRouter = require('./routes/snippet');
+const label = require('./routes/label');
+const snippet = require('./routes/snippet');
 
-app.use(labelRouter);
-app.use(snippetRouter);
-
+app.use('/label', label);
+app.use('/snippet', snippet);
 
 app.get('*', (req, res) => {
 	res.sendFile(path.join(__dirname, '..', '/client/build/index.html'))
