@@ -19,7 +19,7 @@ const LabelBar = () => {
 
 	const createLabel = () => {
 		if (labelName !== '') {
-			fetch(`/createLabel?folder=${labelName}`, {
+			fetch(`/label/create?folder=${labelName}`, {
 				method: 'POST'
 			})
 				.then(response => response.json())
@@ -37,7 +37,7 @@ const LabelBar = () => {
 
 	const deleteLabel = (e, label) => {
 		e.stopPropagation()
-		fetch(`/deleteLabel?folder=${label}`, {
+		fetch(`/label/delete?folder=${label}`, {
 			method: 'DELETE'
 		})
 			.then(res => res.json())

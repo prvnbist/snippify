@@ -23,7 +23,7 @@ const GlobalStyle = createGlobalStyle`
 const App = () => {
 	const [state, dispatch] = React.useReducer(reducers, initialState)
 	React.useEffect(() => {
-		fetch('/files')
+		fetch('/snippet/files')
 			.then(res => res.json())
 			.then(({ files: labels }) => {
 				dispatch({

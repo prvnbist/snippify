@@ -29,7 +29,7 @@ const FileBar = () => {
 			const formData = new FormData()
 			formData.append('file', file)
 			formData.append('folder', state.openLabel)
-			fetch('/saveSnippet', {
+			fetch('/snippet/save', {
 				method: 'POST',
 				body: formData
 			})
