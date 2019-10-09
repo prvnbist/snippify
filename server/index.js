@@ -13,8 +13,8 @@ app.use(fileUpload())
 app.use(express.static(path.join(__dirname, '..', '/client/build')))
 
 //Snippet and label routes
-app.use(snippetRoutes)
-app.use(labelRoutes)
+app.use('/snippet', snippetRoutes)
+app.use('/label', labelRoutes)
 
 app.get('*', (req, res) => {
 	res.sendFile(path.join(__dirname, '..', '/client/build/index.html'))
