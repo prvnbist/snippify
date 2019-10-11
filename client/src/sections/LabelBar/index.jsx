@@ -49,12 +49,15 @@ const LabelBar = () => {
 			method: 'DELETE'
 		})
 			.then(res => res.json())
-			.then(() =>
+			.then(() => {
 				dispatch({
 					type: 'DELETE_LABEL',
 					payload: label
 				})
-			)
+				dispatch({
+					type: 'CLOSE_SNIPPET'
+				})
+			})
 			.catch(err => console.log(err))
 	}
 	return (

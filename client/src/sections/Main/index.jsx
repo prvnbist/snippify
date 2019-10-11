@@ -34,6 +34,8 @@ const Main = () => {
 				.then(res => res.json())
 				.then(({ file }) => setContent(file))
 				.catch(err => console.log(err))
+		} else {
+			setFileName('')
 		}
 	}, [state.openSnippet])
 
