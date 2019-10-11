@@ -12,12 +12,14 @@ import {
 	ListItem,
 	LabelInput,
 	ButtonGroup,
-	EmptyState
+	EmptyState,
+	Search
 } from './styles'
 
 const FileBar = () => {
 	const { state, dispatch } = React.useContext(Context)
 	const [snippetName, setSnippetName] = React.useState('')
+	const [searchText, setSearchText] = React.useState('')
 	const [isModalVisible, setIsModalVisible] = React.useState(false)
 
 	const openSnippet = file =>
@@ -103,11 +105,21 @@ const FileBar = () => {
 				</button>
 			</SectionHeader>
 			{state.files !== [] &&
-				state.files.map(file => (
-					<ListItem onClick={() => openSnippet(file)} key={file}>
-						<span>{file}</span>
-					</ListItem>
-				))}
+				state.files
+					.filter(label => label.toLowerCase().includes(searchText))
+					.map(file => (
+						<ListItem onClick={() => openSnippet(file)} key={file}>
+							<span>{file}</span>
+						</ListItem>
+					))}
+			{state.files !== [] && (
+				<Search
+					type="text"
+					value={searchText}
+					placeholder="Search snippets"
+					onChange={e => setSearchText(e.target.value.toLowerCase())}
+				/>
+			)}
 		</FileBarWrapper>
 	)
 }

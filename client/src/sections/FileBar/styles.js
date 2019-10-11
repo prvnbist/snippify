@@ -4,6 +4,7 @@ const FileBarWrapper = styled.aside`
 	background: #f9ffff;
 	grid-area: file;
 	border-right: 1px solid #e1e1e1;
+	position: relative;
 `
 
 const SectionHeader = styled.div`
@@ -31,7 +32,7 @@ const SectionHeader = styled.div`
 	}
 `
 
-const ListItem = styled.header`
+const ListItem = styled.div`
 	height: 32px;
 	padding: 0 16px;
 	font-size: 14px;
@@ -85,11 +86,25 @@ const EmptyState = styled.div`
 	color: ${props => props.color};
 `
 
+const Search = styled.input`
+	left: 12px;
+	color: #000;
+	bottom: 12px;
+	height: 32px;
+	border: none;
+	position: absolute;
+	padding-left: 12px;
+	border-radius: 4px;
+	width: calc(100% - 24px);
+	background: #e1e1e1;
+`
+
 export {
 	FileBarWrapper,
 	SectionHeader,
 	ListItem,
 	LabelInput,
 	ButtonGroup,
-	EmptyState
+	EmptyState,
+	Search
 }

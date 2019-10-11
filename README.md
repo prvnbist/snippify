@@ -34,7 +34,7 @@ npm run dev:server
   - [x]  Delete
   - [x]  View
   - [ ]  Rename
-  - [ ]  Search
+  - [x]  Search
 - Snippets
   - [x]  Add
   - [x]  Delete
@@ -42,7 +42,7 @@ npm run dev:server
   - [x]  Edit
   - [x]  Rename
   - [x]  Syntax Highlighting
-  - [ ]  Search
+  - [x]  Search
   - [ ]  Copy
 - App
   - [ ] Integrate with Electron

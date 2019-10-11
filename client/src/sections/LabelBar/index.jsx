@@ -11,12 +11,14 @@ import {
 	ListItem,
 	LabelInput,
 	ButtonGroup,
-	EmptyState
+	EmptyState,
+	Search
 } from './styles'
 
 const LabelBar = () => {
 	const { state, dispatch } = React.useContext(Context)
 	const [labelName, setLableName] = React.useState('')
+	const [searchText, setSearchText] = React.useState('')
 	const [isModalVisible, setIsModalVisible] = React.useState(false)
 
 	const openLabel = label =>
@@ -97,18 +99,28 @@ const LabelBar = () => {
 				</button>
 			</SectionHeader>
 			{Object.keys(state.labels).length !== 0 ? (
-				Object.keys(state.labels).map(label => (
-					<ListItem onClick={() => openLabel(label)} key={label}>
-						<span>{label}</span>
-						<button onClick={e => deleteLabel(e, label)}>
-							<TrashIcon size={16} color={'#909090'} />
-						</button>
-					</ListItem>
-				))
+				Object.keys(state.labels)
+					.filter(label => label.toLowerCase().includes(searchText))
+					.map(label => (
+						<ListItem onClick={() => openLabel(label)} key={label}>
+							<span>{label}</span>
+							<button onClick={e => deleteLabel(e, label)}>
+								<TrashIcon size={16} color={'#909090'} />
+							</button>
+						</ListItem>
+					))
 			) : (
 				<EmptyState color={'#fff'}>
 					<span>Create a Label</span>
 				</EmptyState>
+			)}
+			{Object.keys(state.labels).length !== 0 && (
+				<Search
+					type="text"
+					value={searchText}
+					placeholder="Search labels"
+					onChange={e => setSearchText(e.target.value.toLowerCase())}
+				/>
 			)}
 		</LabelBarWrapper>
 	)

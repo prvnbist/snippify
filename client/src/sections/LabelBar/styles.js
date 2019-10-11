@@ -3,6 +3,7 @@ import styled from 'styled-components'
 const LabelBarWrapper = styled.aside`
 	background: #142e44;
 	grid-area: label;
+	position: relative;
 `
 
 const SectionHeader = styled.div`
@@ -96,11 +97,25 @@ const EmptyState = styled.div`
 	color: ${props => props.color};
 `
 
+const Search = styled.input`
+	left: 12px;
+	color: #fff;
+	bottom: 12px;
+	height: 32px;
+	border: none;
+	position: absolute;
+	padding-left: 12px;
+	border-radius: 4px;
+	width: calc(100% - 24px);
+	background: rgba(255, 255, 255, 0.1);
+`
+
 export {
 	LabelBarWrapper,
 	SectionHeader,
 	ListItem,
 	LabelInput,
 	ButtonGroup,
-	EmptyState
+	EmptyState,
+	Search
 }
