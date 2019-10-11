@@ -1,10 +1,10 @@
 import React from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
 
-import LabelBar from './sections/LabelBar'
-import FileBar from './sections/FileBar'
-import Main from './sections/Main'
-import Header from './sections/Header'
+import LabelBar from './sections/LabelBar/index'
+import FileBar from './sections/FileBar/index'
+import Main from './sections/Main/index'
+import Header from './sections/Header/index'
 
 import { Context, initialState, reducers } from './state/Context'
 

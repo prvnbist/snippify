@@ -27,6 +27,7 @@ const initialState = {
 		java: 'java',
 		js: 'javascript',
 		jsx: 'javascript',
+		json: 'json',
 		lua: 'lua',
 		md: 'markdown',
 		php: 'php',
