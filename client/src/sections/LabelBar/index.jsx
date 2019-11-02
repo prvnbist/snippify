@@ -1,6 +1,7 @@
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import actions from '../../state/actions/creators'
 
-import { Context } from '../../state/Context'
 import Modal from '../../components/Modal'
 
 import { AddIcon, CloseIcon, TrashIcon } from '../../assets/Icons'
@@ -16,51 +17,28 @@ import {
 } from './styles'
 
 const LabelBar = () => {
-	const { state, dispatch } = React.useContext(Context)
+	const dispatch = useDispatch()
+	const state = useSelector(state => state)
 	const [labelName, setLableName] = React.useState('')
 	const [searchText, setSearchText] = React.useState('')
 	const [isModalVisible, setIsModalVisible] = React.useState(false)
 
-	const openLabel = label =>
-		dispatch({
-			type: 'OPEN_LABEL',
-			payload: label
-		})
+	React.useEffect(() => {
+		dispatch(actions.getLabels())
+	}, [])
 
 	const createLabel = () => {
 		if (labelName !== '') {
-			fetch(`/label/create?folder=${labelName}`, {
-				method: 'POST'
+			dispatch(actions.createLabel(labelName)).then(() => {
+				setIsModalVisible(!isModalVisible)
+				setLableName('')
 			})
-				.then(response => response.json())
-				.then(result => {
-					setIsModalVisible(!isModalVisible)
-					dispatch({
-						type: 'ADD_LABEL',
-						payload: labelName
-					})
-					setLableName('')
-				})
-				.catch(console.log)
 		}
 	}
 
 	const deleteLabel = (e, label) => {
 		e.stopPropagation()
-		fetch(`/label/delete?folder=${label}`, {
-			method: 'DELETE'
-		})
-			.then(res => res.json())
-			.then(() => {
-				dispatch({
-					type: 'DELETE_LABEL',
-					payload: label
-				})
-				dispatch({
-					type: 'CLOSE_SNIPPET'
-				})
-			})
-			.catch(err => console.log(err))
+		dispatch(actions.deleteLabel(label))
 	}
 	return (
 		<LabelBarWrapper>
@@ -98,11 +76,13 @@ const LabelBar = () => {
 					<AddIcon size={16} color={'#909090'} />
 				</button>
 			</SectionHeader>
-			{Object.keys(state.labels).length !== 0 ? (
-				Object.keys(state.labels)
+			{state.labels.length !== 0 ? (
+				state.labels
 					.filter(label => label.toLowerCase().includes(searchText))
 					.map(label => (
-						<ListItem onClick={() => openLabel(label)} key={label}>
+						<ListItem
+							onClick={() => dispatch(actions.openLabel(label))}
+							key={label}>
 							<span>{label}</span>
 							<button onClick={e => deleteLabel(e, label)}>
 								<TrashIcon size={16} color={'#909090'} />

@@ -1,7 +1,9 @@
 import React from 'react'
-import mime from 'mime-types'
 
-import { Context } from '../../state/Context'
+import { useDispatch, useSelector } from 'react-redux'
+
+import actions from '../../state/actions/creators'
+
 import Modal from '../../components/Modal'
 
 import { AddIcon, CloseIcon } from '../../assets/Icons'
@@ -17,48 +19,21 @@ import {
 } from './styles'
 
 const FileBar = () => {
-	const { state, dispatch } = React.useContext(Context)
+	const dispatch = useDispatch()
+	const state = useSelector(state => state)
 	const [snippetName, setSnippetName] = React.useState('')
 	const [searchText, setSearchText] = React.useState('')
 	const [isModalVisible, setIsModalVisible] = React.useState(false)
 
-	const openSnippet = file =>
-		dispatch({
-			type: 'OPEN_SNIPPET',
-			payload: {
-				folder: state.openLabel,
-				file: file
-			}
-		})
-
 	const createSnippet = () => {
 		if (snippetName !== '') {
-			const file = new File([' '], snippetName, {
-				type: mime.lookup(snippetName)
+			dispatch(actions.createSnippet(snippetName)).then(() => {
+				setIsModalVisible(!isModalVisible)
+				setSnippetName('')
 			})
-			const formData = new FormData()
-			formData.append('file', file)
-			formData.append('folder', state.openLabel)
-			fetch('/snippet/save', {
-				method: 'POST',
-				body: formData
-			})
-				.then(response => response.json())
-				.then(() => {
-					setIsModalVisible(!isModalVisible)
-					dispatch({
-						type: 'ADD_SNIPPET',
-						payload: {
-							folder: state.openLabel,
-							file: snippetName
-						}
-					})
-					setSnippetName('')
-				})
-				.catch(error => console.log(error))
 		}
 	}
-	if (state.openLabel === '')
+	if (state.label === '')
 		return (
 			<FileBarWrapper>
 				<EmptyState>
@@ -99,16 +74,23 @@ const FileBar = () => {
 				</Modal>
 			)}
 			<SectionHeader>
-				<span>{state.openLabel}</span>
+				<span>{state.label}</span>
 				<button onClick={() => setIsModalVisible(!isModalVisible)}>
 					<AddIcon size={16} color={'#909090'} />
 				</button>
 			</SectionHeader>
 			{state.files !== [] &&
 				state.files
-					.filter(label => label.toLowerCase().includes(searchText))
+					.filter(file => file.toLowerCase().includes(searchText))
 					.map(file => (
-						<ListItem onClick={() => openSnippet(file)} key={file}>
+						<ListItem
+							onClick={() =>
+								dispatch({
+									type: 'OPEN_SNIPPET',
+									payload: file
+								})
+							}
+							key={file}>
 							<span>{file}</span>
 						</ListItem>
 					))}

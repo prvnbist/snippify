@@ -1,4 +1,5 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import styled, { createGlobalStyle } from 'styled-components'
 
 import LabelBar from './sections/LabelBar/index'
@@ -6,7 +7,7 @@ import FileBar from './sections/FileBar/index'
 import Main from './sections/Main/index'
 import Header from './sections/Header/index'
 
-import { Context, initialState, reducers } from './state/Context'
+import actions from './state/actions/creators'
 
 const GlobalStyle = createGlobalStyle`
 	* {
@@ -21,20 +22,8 @@ const GlobalStyle = createGlobalStyle`
 `
 
 const App = () => {
-	const [state, dispatch] = React.useReducer(reducers, initialState)
-	React.useEffect(() => {
-		fetch('/snippet/files')
-			.then(res => res.json())
-			.then(({ files: labels }) => {
-				dispatch({
-					type: 'SET_LABELS',
-					payload: labels
-				})
-			})
-			.catch(err => console.log(err))
-	}, [])
 	return (
-		<Context.Provider value={{ state, dispatch }}>
+		<div>
 			<GlobalStyle />
 			<Wrapper>
 				<Header />
@@ -42,7 +31,7 @@ const App = () => {
 				<FileBar />
 				<Main />
 			</Wrapper>
-		</Context.Provider>
+		</div>
 	)
 }
 
