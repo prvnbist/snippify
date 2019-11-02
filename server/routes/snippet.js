@@ -4,29 +4,12 @@ const fs = require('fs')
 const router = new express.Router()
 
 const { isFileAttached } = require('../utils/middlewares')
-const { getAllFiles } = require('../utils/files.js')
 
 const defaultLocation = '..'
 
-// Get list of all files
-router.get('/files', (req, res) => {
-	const location = `${defaultLocation}/snippets`
-	if (!fs.existsSync(location)) {
-		fs.mkdirSync(location, { recursive: true })
-	}
-	return getAllFiles(location)
-		.then(files => res.send({ files }))
-		.catch(error =>
-			res.status(400).send({
-				success: false,
-				message: `${new Error(error)}`
-			})
-		)
-})
-
-router.get('/file', (req, res) => {
-	const { folder, file } = req.query
-	const filePath = `${defaultLocation}/snippets/${folder}/${file}`
+router.get('/:label/:snippet', (req, res) => {
+	const { label, snippet } = req.params
+	const filePath = `${defaultLocation}/snippets/${label}/${snippet}`
 	fs.readFile(filePath, (err, data) => {
 		if (err)
 			return res.status(404).send({
@@ -37,16 +20,35 @@ router.get('/file', (req, res) => {
 	})
 })
 
-// Create Files
+// Create File
+router.post('/create', (req, res) => {
+	const { folder, file } = req.body
+	const location = `${defaultLocation}/snippets/${folder}`
+	if (!fs.existsSync(location)) {
+		fs.mkdirSync(location, { recursive: true })
+	}
+	fs.writeFile(`${location}/${file}`, '', err => {
+		if (err)
+			return res.status(404).send({
+				success: false,
+				message: `${new Error(err)}`
+			})
+		return res
+			.status(200)
+			.send({ success: true, message: 'File has been saved!' })
+	})
+})
+
+// Save Files
 router.post('/save', isFileAttached, (req, res) => {
-	const { file } = req.files
-	const { folder } = req.body
-	const saveLocation = `${defaultLocation}/snippets/${folder}`
-	const savePath = `${saveLocation}/${file.name}`
+	const { snippet } = req.files
+	const { label } = req.body
+	const saveLocation = `${defaultLocation}/snippets/${label}`
+	const savePath = `${saveLocation}/${snippet.name}`
 	if (!fs.existsSync(saveLocation)) {
 		fs.mkdirSync(saveLocation, { recursive: true })
 	}
-	fs.writeFile(savePath, file.data.toString(), err => {
+	fs.writeFile(savePath, snippet.data.toString(), err => {
 		if (err)
 			return res.status(404).send({
 				success: false,
@@ -59,10 +61,10 @@ router.post('/save', isFileAttached, (req, res) => {
 })
 
 // Delete Files
-router.delete('/delete', (req, res) => {
-	const { folder, file } = req.query
-	const filePath = `${defaultLocation}/snippets/${folder}/${file}`
-	fs.unlink(filePath, err => {
+router.delete('/delete/:label/:snippet', (req, res) => {
+	const { label, snippet } = req.params
+	const location = `${defaultLocation}/snippets/${label}/${snippet}`
+	fs.unlink(location, err => {
 		if (err)
 			return res.status(404).send({
 				success: false,
@@ -76,8 +78,8 @@ router.delete('/delete', (req, res) => {
 
 // Rename File
 router.post('/rename', (req, res) => {
-	const { folder, file, newName } = req.body
-	const oldPath = `${defaultLocation}/snippets/${folder}/${file}`
+	const { folder, oldName, newName } = req.body
+	const oldPath = `${defaultLocation}/snippets/${folder}/${oldName}`
 	const newPath = `${defaultLocation}/snippets/${folder}/${newName}`
 	fs.rename(oldPath, newPath, err => {
 		if (err)
