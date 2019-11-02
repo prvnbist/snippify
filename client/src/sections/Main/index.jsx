@@ -1,9 +1,7 @@
 import React from 'react'
 import Editor from '@monaco-editor/react'
-
-import mime from 'mime-types'
-
-import { Context } from '../../state/Context'
+import { useDispatch, useSelector } from 'react-redux'
+import actions from '../../state/actions/creators'
 
 import { EditIcon, TrashIcon, SaveIcon } from '../../assets/Icons'
 
@@ -19,25 +17,23 @@ import {
 
 const Main = () => {
 	const editorRef = React.useRef()
-	const { state, dispatch } = React.useContext(Context)
+	const dispatch = useDispatch()
+	const state = useSelector(state => state)
 	const [content, setContent] = React.useState(null)
 	const [fileName, setFileName] = React.useState('')
 	const [isContentEditable, setIsContentEditable] = React.useState(false)
 	const [isFileNameEditable, setIsFileNameEditable] = React.useState(false)
 
 	React.useEffect(() => {
-		if (state.openSnippet.folder !== '') {
-			setFileName(state.openSnippet.file)
-			fetch(
-				`/snippet/file?folder=${state.openSnippet.folder}&file=${state.openSnippet.file}`
-			)
-				.then(res => res.json())
-				.then(({ file }) => setContent(file))
-				.catch(err => console.log(err))
+		if (state.snippet) {
+			dispatch(actions.openSnippet(state.snippet)).then(file => {
+				setFileName(state.snippet)
+				setContent(file)
+			})
 		} else {
 			setFileName('')
 		}
-	}, [state.openSnippet])
+	}, [state.snippet])
 
 	function handleEditorDidMount(_, editor) {
 		editorRef.current = editor
@@ -45,21 +41,9 @@ const Main = () => {
 
 	const saveSnippet = () => {
 		setIsContentEditable(isContentEditable => !isContentEditable)
-		const file = new File([editorRef.current.getValue()], fileName, {
-			type: mime.lookup(fileName)
-		})
-		const formData = new FormData()
-		formData.append('file', file)
-		formData.append('folder', state.openLabel)
-		if (content !== editorRef.current.getValue()) {
-			fetch('/snippet/save', {
-				method: 'POST',
-				body: formData
-			})
-				.then(response => response.json())
-				.then(success => console.log(success))
-				.catch(error => console.log(error))
-		}
+		dispatch(actions.saveSnippet(editorRef.current.getValue())).then(
+			result => console.log(result)
+		)
 	}
 
 	const editName = () => {
@@ -68,46 +52,13 @@ const Main = () => {
 
 	const deleteSnippet = () => {
 		setFileName('')
-		const URL = `/snippet/delete?folder=${state.openSnippet.folder}&file=${state.openSnippet.file}`
-		fetch(URL, {
-			method: 'DELETE'
-		})
-			.then(res => res.json())
-			.then(() =>
-				dispatch({
-					type: 'DELETE_SNIPPET',
-					payload: {
-						folder: state.openSnippet.folder,
-						file: state.openSnippet.file
-					}
-				})
-			)
-			.catch(err => console.log(err))
+		dispatch(actions.deleteSnippet())
 	}
 
-	const saveName = () => {
+	const renameSnippet = () => {
 		setIsFileNameEditable(isFileNameEditable => !isFileNameEditable)
-		if (state.openSnippet.file !== fileName) {
-			const formData = new FormData()
-			formData.append('folder', state.openSnippet.folder)
-			formData.append('file', state.openSnippet.file)
-			formData.append('newName', fileName)
-			fetch('/snippet/rename', {
-				method: 'POST',
-				body: formData
-			})
-				.then(res => res.json())
-				.then(() => {
-					dispatch({
-						type: 'RENAME_SNIPPET',
-						payload: {
-							folder: state.openSnippet.folder,
-							file: state.openSnippet.file,
-							newName: fileName
-						}
-					})
-				})
-				.catch(err => console.log(err))
+		if (state.snippet !== fileName) {
+			dispatch(actions.renameSnippet(fileName))
 		}
 	}
 
@@ -130,7 +81,7 @@ const Main = () => {
 			<SectionHeader>
 				<FileName isFileNameEditable={isFileNameEditable}>
 					{isFileNameEditable ? (
-						<IconBtn onClick={() => saveName()}>
+						<IconBtn onClick={() => renameSnippet()}>
 							<SaveIcon size={16} color={'#26ACB4'} />
 						</IconBtn>
 					) : (
@@ -166,9 +117,7 @@ const Main = () => {
 			</SectionHeader>
 			<Editor
 				height="100%"
-				language={
-					state.languages[`${state.openSnippet.file.split('.')[1]}`]
-				}
+				language={state.languages[`${state.snippet.split('.')[1]}`]}
 				value={content}
 				options={options}
 				editorDidMount={handleEditorDidMount}
