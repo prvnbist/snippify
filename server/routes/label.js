@@ -63,4 +63,30 @@ router.delete('/delete/:name', (req, res) => {
 	})
 })
 
+// Rename Label
+router.post('/rename', (req, res) => {
+	const { oldName, newName } = req.body
+	const oldPath = `${defaultLocation}/snippets/${oldName}`
+	const newPath = `${defaultLocation}/snippets/${newName}`
+	if (fs.existsSync(newPath)) {
+		return res.status(200).send({
+			success: true,
+			message: `Label ${newName} already exists!`
+		})
+	}
+	fs.rename(oldPath, newPath, err => {
+		if (err)
+			return res.status(404).send({
+				success: false,
+				message: `Label ${oldName} doesn't exist!`
+			})
+		return res
+			.status(200)
+			.send({
+				success: true,
+				message: `Label ${oldName} has been renamed!`
+			})
+	})
+})
+
 module.exports = router
