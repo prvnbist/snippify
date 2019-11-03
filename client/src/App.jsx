@@ -16,30 +16,27 @@ const GlobalStyle = createGlobalStyle`
 	body {
 		overflow: hidden;
 	}
+	#root {
+		display: grid;
+		height: 100vh;
+		grid-template-columns: 200px 300px 1fr;
+		grid-template-rows: 48px 1fr;
+		grid-template-areas:
+			'head head head'
+			'label file main';
+	}
 `
 
 const App = () => {
 	return (
-		<div>
+		<>
 			<GlobalStyle />
-			<Wrapper>
-				<Header />
-				<LabelBar />
-				<FileBar />
-				<Main />
-			</Wrapper>
-		</div>
+			<Header />
+			<LabelBar />
+			<FileBar />
+			<Main />
+		</>
 	)
 }
 
 export default App
-
-const Wrapper = styled.div`
-	display: grid;
-	height: 100vh;
-	grid-template-columns: 200px 300px 1fr;
-	grid-template-rows: 48px 1fr;
-	grid-template-areas:
-		'head head head'
-		'label file main';
-`
