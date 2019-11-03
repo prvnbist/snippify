@@ -33,7 +33,7 @@ npm run dev:server
   - [x]  Add
   - [x]  Delete
   - [x]  View
-  - [ ]  Rename
+  - [x]  Rename
   - [x]  Search
 - Snippets
   - [x]  Add
