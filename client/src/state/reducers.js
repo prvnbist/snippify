@@ -8,7 +8,11 @@ import {
 	OPEN_SNIPPET,
 	CLOSE_SNIPPET,
 	RENAME_SNIPPET,
-	DELETE_SNIPPET
+	DELETE_SNIPPET,
+	SET_ERROR,
+	SET_SUCCESS,
+	REMOVE_ERROR,
+	REMOVE_SUCCESS
 } from './actions/types'
 
 const reducers = (state, action) => {
@@ -84,6 +88,26 @@ const reducers = (state, action) => {
 				...state,
 				label: action.payload.label,
 				files: action.payload.files
+			}
+		case SET_ERROR:
+			return {
+				...state,
+				error: action.payload
+			}
+		case REMOVE_ERROR:
+			return {
+				...state,
+				error: ''
+			}
+		case SET_SUCCESS:
+			return {
+				...state,
+				success: action.payload
+			}
+		case REMOVE_SUCCESS:
+			return {
+				...state,
+				success: ''
 			}
 		default:
 			return state

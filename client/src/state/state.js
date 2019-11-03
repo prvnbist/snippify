@@ -3,6 +3,8 @@ const initialState = {
 	files: [],
 	snippet: '',
 	label: '',
+	error: '',
+	success: '',
 	languages: {
 		coffee: 'coffeescript',
 		h: 'objective-c',

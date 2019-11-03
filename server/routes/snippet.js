@@ -14,13 +14,13 @@ router.get('/:label/:snippet', (req, res) => {
 		if (err)
 			return res.status(404).send({
 				success: false,
-				message: `File ${file} doesn't exist!`
+				message: `Snippet ${file} doesn't exist!`
 			})
 		return res.status(200).send({ success: true, file: data.toString() })
 	})
 })
 
-// Create File
+// Create Snippet
 router.post('/create', (req, res) => {
 	const { label, snippet } = req.body
 	const location = `${defaultLocation}/snippets/${label}`
@@ -33,13 +33,14 @@ router.post('/create', (req, res) => {
 				success: false,
 				message: `${new Error(err)}`
 			})
-		return res
-			.status(200)
-			.send({ success: true, message: 'File has been saved!' })
+		return res.status(200).send({
+			success: true,
+			message: `Snippet ${snippet} has been saved!`
+		})
 	})
 })
 
-// Save Files
+// Save Snippet
 router.post('/save', isFileAttached, (req, res) => {
 	const { snippet } = req.files
 	const { label } = req.body
@@ -52,15 +53,16 @@ router.post('/save', isFileAttached, (req, res) => {
 		if (err)
 			return res.status(404).send({
 				success: false,
-				message: `File ${file} doesn't exist!`
+				message: `Snippet ${snippet.name} doesn't exist!`
 			})
-		return res
-			.status(200)
-			.send({ success: true, message: 'File has been saved!' })
+		return res.status(200).send({
+			success: true,
+			message: `Snippet ${snippet.name} has been saved!`
+		})
 	})
 })
 
-// Delete Files
+// Delete Snippet
 router.delete('/delete/:label/:snippet', (req, res) => {
 	const { label, snippet } = req.params
 	const location = `${defaultLocation}/snippets/${label}/${snippet}`
@@ -68,28 +70,36 @@ router.delete('/delete/:label/:snippet', (req, res) => {
 		if (err)
 			return res.status(404).send({
 				success: false,
-				message: `File ${file} doesn't exist!`
+				message: `Snippet ${snippet} doesn't exist!`
 			})
-		return res
-			.status(200)
-			.send({ success: true, message: 'File has been deleted!' })
+		return res.status(200).send({
+			success: true,
+			message: `Snippet ${snippet} has been deleted!`
+		})
 	})
 })
 
 // Rename File
 router.post('/rename', (req, res) => {
-	const { folder, oldName, newName } = req.body
-	const oldPath = `${defaultLocation}/snippets/${folder}/${oldName}`
-	const newPath = `${defaultLocation}/snippets/${folder}/${newName}`
+	const { label, oldName, newName } = req.body
+	const oldPath = `${defaultLocation}/snippets/${label}/${oldName}`
+	const newPath = `${defaultLocation}/snippets/${label}/${newName}`
+	if (fs.existsSync(newPath)) {
+		return res.status(404).send({
+			success: false,
+			message: `Snippet ${newName} already exists!`
+		})
+	}
 	fs.rename(oldPath, newPath, err => {
 		if (err)
 			return res.status(404).send({
 				success: false,
-				message: `File ${file} doesn't exist!`
+				message: `Snippet ${oldName} doesn't exist!`
 			})
-		return res
-			.status(200)
-			.send({ success: true, message: 'File has been renamed!' })
+		return res.status(200).send({
+			success: true,
+			message: `Snippet ${oldName} has been renamed to ${newName}!`
+		})
 	})
 })
 

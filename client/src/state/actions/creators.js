@@ -5,11 +5,29 @@ import {
 	SET_LABELS,
 	OPEN_LABEL,
 	RENAME_LABEL,
+	SET_ERROR,
+	SET_SUCCESS,
+	REMOVE_SUCCESS,
+	REMOVE_ERROR,
 	CREATE_SNIPPET,
 	CLOSE_SNIPPET,
 	RENAME_SNIPPET,
 	DELETE_SNIPPET
 } from './types'
+
+const successOrError = (dispatch, { success, message }) => {
+	dispatch({
+		type: success ? SET_SUCCESS : SET_ERROR,
+		payload: message
+	})
+	setTimeout(
+		() =>
+			dispatch({
+				type: success ? REMOVE_SUCCESS : REMOVE_ERROR
+			}),
+		3000
+	)
+}
 
 // Create Label
 const createLabel = label => {
@@ -21,13 +39,20 @@ const createLabel = label => {
 			body
 		})
 			.then(response => response.json())
-			.then(() => {
+			.then(({ success, message }) => {
 				dispatch({
 					type: CREATE_LABEL,
 					payload: label
 				})
+				if (success) {
+					successOrError(dispatch, { success, message })
+				} else {
+					throw new Error(message)
+				}
 			})
-			.catch(console.log)
+			.catch(({ message }) => {
+				successOrError(dispatch, { success: false, message })
+			})
 	}
 }
 
@@ -58,7 +83,7 @@ const renameLabel = (oldName, newName) => {
 			body
 		})
 			.then(res => res.json())
-			.then(() => {
+			.then(({ success, message }) => {
 				dispatch({
 					type: RENAME_LABEL,
 					payload: {
@@ -66,8 +91,15 @@ const renameLabel = (oldName, newName) => {
 						newName
 					}
 				})
+				if (success) {
+					successOrError(dispatch, { success, message })
+				} else {
+					throw new Error(message)
+				}
 			})
-			.catch(err => console.log(err))
+			.catch(({ message }) => {
+				successOrError(dispatch, { success: false, message })
+			})
 	}
 }
 
@@ -78,7 +110,7 @@ const deleteLabel = label => {
 			method: 'DELETE'
 		})
 			.then(res => res.json())
-			.then(() => {
+			.then(({ success, message }) => {
 				dispatch({
 					type: DELETE_LABEL,
 					payload: label
@@ -86,8 +118,15 @@ const deleteLabel = label => {
 				dispatch({
 					type: CLOSE_SNIPPET
 				})
+				if (success) {
+					successOrError(dispatch, { success, message })
+				} else {
+					throw new Error(message)
+				}
 			})
-			.catch(err => console.log(err))
+			.catch(({ message }) => {
+				successOrError(dispatch, { success: false, message })
+			})
 	}
 }
 
@@ -106,7 +145,7 @@ const getLabels = () => dispatch => {
 
 // Save File
 const saveSnippet = content => {
-	return (_, getState) => {
+	return (dispatch, getState) => {
 		const snippet = new File([content], getState().snippet, {
 			type: mime.lookup(getState().snippet)
 		})
@@ -118,8 +157,16 @@ const saveSnippet = content => {
 			body: data
 		})
 			.then(response => response.json())
-			.then(result => result)
-			.catch(error => console.log(error))
+			.then(({ success, message }) => {
+				if (success) {
+					successOrError(dispatch, { success, message })
+				} else {
+					throw new Error(message)
+				}
+			})
+			.catch(({ message }) => {
+				successOrError(dispatch, { success: false, message })
+			})
 	}
 }
 // Create File
@@ -133,13 +180,20 @@ const createSnippet = (name, ext) => {
 			body
 		})
 			.then(response => response.json())
-			.then(() =>
+			.then(({ success, message }) => {
 				dispatch({
 					type: CREATE_SNIPPET,
 					payload: `${name}.${ext}`
 				})
-			)
-			.catch(error => console.log(error))
+				if (success) {
+					successOrError(dispatch, { success, message })
+				} else {
+					throw new Error(message)
+				}
+			})
+			.catch(({ message }) => {
+				successOrError(dispatch, { success: false, message })
+			})
 	}
 }
 // Open File
@@ -154,7 +208,7 @@ const openSnippet = file => (_, getState) => {
 const renameSnippet = name => {
 	return (dispatch, getState) => {
 		const body = new FormData()
-		body.append('folder', getState().label)
+		body.append('label', getState().label)
 		body.append('oldName', getState().snippet)
 		body.append('newName', name)
 		return fetch('/snippets/rename', {
@@ -162,13 +216,20 @@ const renameSnippet = name => {
 			body
 		})
 			.then(res => res.json())
-			.then(() => {
+			.then(({ success, message }) => {
 				dispatch({
 					type: RENAME_SNIPPET,
 					payload: name
 				})
+				if (success) {
+					successOrError(dispatch, { success, message })
+				} else {
+					throw new Error(message)
+				}
 			})
-			.catch(err => console.log(err))
+			.catch(({ message }) => {
+				successOrError(dispatch, { success: false, message })
+			})
 	}
 }
 // Delete File
@@ -178,12 +239,20 @@ const deleteSnippet = () => {
 			method: 'DELETE'
 		})
 			.then(res => res.json())
-			.then(() =>
+			.then(({ success, message }) => {
 				dispatch({
 					type: DELETE_SNIPPET
 				})
-			)
-			.catch(err => console.log(err))
+
+				if (success) {
+					successOrError(dispatch, { success, message })
+				} else {
+					throw new Error(message)
+				}
+			})
+			.catch(({ message }) => {
+				successOrError(dispatch, { success: false, message })
+			})
 	}
 }
 // Get Files
