@@ -12,10 +12,10 @@ import {
 	FileBarWrapper,
 	SectionHeader,
 	ListItem,
-	LabelInput,
 	ButtonGroup,
 	EmptyState,
-	Search
+	Search,
+	InputWrapper
 } from './styles'
 
 const FileBar = () => {
@@ -24,13 +24,18 @@ const FileBar = () => {
 	const [snippetName, setSnippetName] = React.useState('')
 	const [searchText, setSearchText] = React.useState('')
 	const [isModalVisible, setIsModalVisible] = React.useState(false)
+	const [selectValue, setSelectValue] = React.useState(
+		Object.keys(state.languages)[0]
+	)
 
 	const createSnippet = () => {
 		if (snippetName !== '') {
-			dispatch(actions.createSnippet(snippetName)).then(() => {
-				setIsModalVisible(!isModalVisible)
-				setSnippetName('')
-			})
+			dispatch(actions.createSnippet(snippetName, selectValue)).then(
+				() => {
+					setIsModalVisible(!isModalVisible)
+					setSnippetName('')
+				}
+			)
 		}
 	}
 	if (state.label === '')
@@ -53,12 +58,24 @@ const FileBar = () => {
 						</button>
 					</Modal.Header>
 					<Modal.Body>
-						<LabelInput
-							type="text"
-							value={snippetName}
-							onChange={e => setSnippetName(e.target.value)}
-							placeholder="Enter the snippet name"
-						/>
+						<InputWrapper>
+							<input
+								type="text"
+								value={snippetName}
+								onChange={e => setSnippetName(e.target.value)}
+								placeholder="Enter the snippet name"
+							/>
+							<select
+								name="languages"
+								value={selectValue}
+								onChange={e => setSelectValue(e.target.value)}>
+								{Object.keys(state.languages).map(ext => (
+									<option key={ext} value={ext}>
+										{state.languages[ext]}
+									</option>
+								))}
+							</select>
+						</InputWrapper>
 						<ButtonGroup>
 							<button onClick={() => createSnippet()}>
 								Save

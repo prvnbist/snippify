@@ -46,15 +46,6 @@ const ListItem = styled.div`
 	}
 `
 
-const LabelInput = styled.input`
-	width: 60%;
-	height: 40px;
-	background: #fff;
-	border: 1px solid #c6f4f6;
-	border-radius: 6px;
-	padding-left: 12px;
-`
-
 const ButtonGroup = styled.div`
 	margin-top: auto;
 	justify-self: flex-end;
@@ -99,12 +90,29 @@ const Search = styled.input`
 	background: #f1f1f1;
 `
 
+const InputWrapper = styled.div`
+	width: 100%;
+	display: flex;
+	input,
+	select {
+		flex: 1;
+		height: 40px;
+		background: #fff;
+		border: 1px solid #c6f4f6;
+		border-radius: 6px;
+		padding-left: 12px;
+	}
+	select {
+		margin-left: 16px;
+	}
+`
+
 export {
 	FileBarWrapper,
 	SectionHeader,
 	ListItem,
-	LabelInput,
 	ButtonGroup,
 	EmptyState,
-	Search
+	Search,
+	InputWrapper
 }

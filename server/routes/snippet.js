@@ -22,12 +22,12 @@ router.get('/:label/:snippet', (req, res) => {
 
 // Create File
 router.post('/create', (req, res) => {
-	const { folder, file } = req.body
-	const location = `${defaultLocation}/snippets/${folder}`
+	const { label, snippet } = req.body
+	const location = `${defaultLocation}/snippets/${label}`
 	if (!fs.existsSync(location)) {
 		fs.mkdirSync(location, { recursive: true })
 	}
-	fs.writeFile(`${location}/${file}`, '', err => {
+	fs.writeFile(`${location}/${snippet}`, '', err => {
 		if (err)
 			return res.status(404).send({
 				success: false,

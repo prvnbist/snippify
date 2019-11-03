@@ -123,11 +123,11 @@ const saveSnippet = content => {
 	}
 }
 // Create File
-const createSnippet = name => {
+const createSnippet = (name, ext) => {
 	return (dispatch, getState) => {
 		const body = new FormData()
-		body.append('folder', getState().label)
-		body.append('file', name)
+		body.append('label', getState().label)
+		body.append('snippet', `${name}.${ext}`)
 		return fetch('/snippets/create', {
 			method: 'POST',
 			body
@@ -136,7 +136,7 @@ const createSnippet = name => {
 			.then(() =>
 				dispatch({
 					type: CREATE_SNIPPET,
-					payload: name
+					payload: `${name}.${ext}`
 				})
 			)
 			.catch(error => console.log(error))
