@@ -110,6 +110,12 @@ const Search = styled.input`
 	background: rgba(255, 255, 255, 0.1);
 `
 
+const Actions = styled.div`
+	button {
+		margin-left: 8px;
+	}
+`
+
 export {
 	LabelBarWrapper,
 	SectionHeader,
@@ -117,5 +123,6 @@ export {
 	LabelInput,
 	ButtonGroup,
 	EmptyState,
-	Search
+	Search,
+	Actions
 }

@@ -3,6 +3,7 @@ import {
 	DELETE_LABEL,
 	SET_LABELS,
 	OPEN_LABEL,
+	RENAME_LABEL,
 	CREATE_SNIPPET,
 	OPEN_SNIPPET,
 	CLOSE_SNIPPET,
@@ -26,6 +27,19 @@ const reducers = (state, action) => {
 				labels: labels.filter(Boolean),
 				label: '',
 				files: state.openLabel === action.payload ? [] : state.files
+			}
+		}
+		case RENAME_LABEL: {
+			const labels = state.labels
+			labels[labels.indexOf(action.payload.oldName)] =
+				action.payload.newName
+			return {
+				...state,
+				labels,
+				label:
+					state.label === action.payload.oldName
+						? action.payload.newName
+						: state.label
 			}
 		}
 		case SET_LABELS:

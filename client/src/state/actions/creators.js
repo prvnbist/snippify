@@ -4,8 +4,8 @@ import {
 	DELETE_LABEL,
 	SET_LABELS,
 	OPEN_LABEL,
+	RENAME_LABEL,
 	CREATE_SNIPPET,
-	OPEN_SNIPPET,
 	CLOSE_SNIPPET,
 	RENAME_SNIPPET,
 	DELETE_SNIPPET
@@ -35,20 +35,42 @@ const createLabel = label => {
 const openLabel = label => dispatch => {
 	return fetch(`/labels/${label}`)
 		.then(response => response.json())
-		.then(
-			({ files }) =>
-				console.log(files) ||
-				dispatch({
-					type: OPEN_LABEL,
-					payload: {
-						label,
-						files
-					}
-				})
+		.then(({ files }) =>
+			dispatch({
+				type: OPEN_LABEL,
+				payload: {
+					label,
+					files
+				}
+			})
 		)
 		.catch(error => console.log(error))
 }
+
 // Rename Label
+const renameLabel = (oldName, newName) => {
+	return (dispatch, getState) => {
+		const body = new FormData()
+		body.append('oldName', oldName)
+		body.append('newName', newName)
+		return fetch('/labels/rename', {
+			method: 'POST',
+			body
+		})
+			.then(res => res.json())
+			.then(() => {
+				dispatch({
+					type: RENAME_LABEL,
+					payload: {
+						oldName,
+						newName
+					}
+				})
+			})
+			.catch(err => console.log(err))
+	}
+}
+
 // Delete Label
 const deleteLabel = label => {
 	return dispatch => {
@@ -75,7 +97,7 @@ const getLabels = () => dispatch => {
 		.then(res => res.json())
 		.then(({ labels }) => {
 			dispatch({
-				type: 'SET_LABELS',
+				type: SET_LABELS,
 				payload: labels
 			})
 		})
@@ -171,6 +193,7 @@ export default {
 	getLabels,
 	createLabel,
 	deleteLabel,
+	renameLabel,
 	createSnippet,
 	openSnippet,
 	deleteSnippet,
