@@ -96,7 +96,7 @@ const Search = styled.input`
 	padding-left: 12px;
 	border-radius: 4px;
 	width: calc(100% - 24px);
-	background: #e1e1e1;
+	background: #f1f1f1;
 `
 
 export {

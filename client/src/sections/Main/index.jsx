@@ -33,7 +33,7 @@ const Main = () => {
 		} else {
 			setFileName('')
 		}
-	}, [state.snippet])
+	}, [state.snippet, dispatch])
 
 	function handleEditorDidMount(_, editor) {
 		editorRef.current = editor
