@@ -41,9 +41,14 @@ const Main = () => {
 
 	const saveSnippet = () => {
 		setIsContentEditable(isContentEditable => !isContentEditable)
-		dispatch(actions.saveSnippet(editorRef.current.getValue())).then(
-			result => console.log(result)
-		)
+		if (
+			editorRef.current.getValue() &&
+			editorRef.current.getValue() !== content
+		) {
+			dispatch(actions.saveSnippet(editorRef.current.getValue())).then(
+				result => console.log(result)
+			)
+		}
 	}
 
 	const editName = () => {
