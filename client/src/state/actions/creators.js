@@ -42,7 +42,7 @@ const createLabel = label => {
 			.then(({ success, message }) => {
 				dispatch({
 					type: CREATE_LABEL,
-					payload: label
+					payload: success ? label : null
 				})
 				if (success) {
 					successOrError(dispatch, { success, message })

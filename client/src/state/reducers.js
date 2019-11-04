@@ -20,7 +20,7 @@ const reducers = (state, action) => {
 		case CREATE_LABEL: {
 			return {
 				...state,
-				labels: [...state.labels, action.payload]
+				labels: action.payload ? [...state.labels, action.payload] : [...state.labels]
 			}
 		}
 		case DELETE_LABEL: {
