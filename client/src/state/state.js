@@ -11,6 +11,7 @@ const initialState = {
 		bat: 'bat',
 		clj: 'clojure',
 		cpp: 'cpp',
+		c: 'c',
 		cs: 'csharp',
 		csp: 'csp',
 		dockerfile: 'dockerfile',
