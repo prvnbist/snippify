@@ -122,7 +122,7 @@ const Main = () => {
 			</SectionHeader>
 			<Editor
 				height="100%"
-				language={state.languages[`${state.snippet.split('.')[1]}`]}
+				language={state.languages[`${state.snippet.split('.').pop()}`]}
 				value={content}
 				options={options}
 				editorDidMount={handleEditorDidMount}
