@@ -1,22 +1,22 @@
 {
-  "name": "snippify-server",
-  "version": "0.1.0",
-  "description": "This is the backend of snippify.",
-  "main": "index.js",
-  "scripts": {
-    "dev": "nodemon index.js",
-    "start": "node index.js"
-  },
-  "author": "Praveen Bisht",
-  "license": "MIT",
-  "dependencies": {
-    "body-parser": "^1.19.0",
-    "express": "^4.17.1",
-    "express-fileupload": "^1.1.6-alpha.5",
-    "morgan": "^1.9.1",
-    "rimraf": "^3.0.0"
-  },
-  "devDependencies": {
-    "nodemon": "^1.19.2"
-  }
+	"name": "snippify-server",
+	"version": "0.1.0",
+	"description": "This is the backend of snippify.",
+	"main": "index.js",
+	"scripts": {
+		"dev": "nodemon index.js",
+		"start": "node index.js"
+	},
+	"author": "Praveen Bisht",
+	"license": "MIT",
+	"dependencies": {
+		"body-parser": "^1.19.0",
+		"express": "^4.17.1",
+		"express-fileupload": "^1.1.6",
+		"morgan": "^1.9.1",
+		"rimraf": "^3.0.1"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.2"
+	}
 }
