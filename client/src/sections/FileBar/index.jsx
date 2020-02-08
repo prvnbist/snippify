@@ -30,12 +30,10 @@ const FileBar = () => {
 
 	const createSnippet = () => {
 		if (snippetName !== '') {
-			dispatch(actions.createSnippet(snippetName, selectValue)).then(
-				() => {
-					setIsModalVisible(!isModalVisible)
-					setSnippetName('')
-				}
-			)
+			dispatch(actions.createSnippet(snippetName, selectValue)).then(() => {
+				setIsModalVisible(!isModalVisible)
+				setSnippetName('')
+			})
 		}
 	}
 	if (state.label === '')
@@ -52,8 +50,7 @@ const FileBar = () => {
 				<Modal>
 					<Modal.Header>
 						<span>Add Snippet</span>
-						<button
-							onClick={() => setIsModalVisible(!isModalVisible)}>
+						<button onClick={() => setIsModalVisible(!isModalVisible)}>
 							<CloseIcon size={16} color={'#909090'} />
 						</button>
 					</Modal.Header>
@@ -77,13 +74,8 @@ const FileBar = () => {
 							</select>
 						</InputWrapper>
 						<ButtonGroup>
-							<button onClick={() => createSnippet()}>
-								Save
-							</button>
-							<button
-								onClick={() =>
-									setIsModalVisible(!isModalVisible)
-								}>
+							<button onClick={() => createSnippet()}>Save</button>
+							<button onClick={() => setIsModalVisible(!isModalVisible)}>
 								Cancel
 							</button>
 						</ButtonGroup>

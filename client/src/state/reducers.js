@@ -35,8 +35,7 @@ const reducers = (state, action) => {
 		}
 		case RENAME_LABEL: {
 			const labels = state.labels
-			labels[labels.indexOf(action.payload.oldName)] =
-				action.payload.newName
+			labels[labels.indexOf(action.payload.oldName)] = action.payload.newName
 			return {
 				...state,
 				labels,

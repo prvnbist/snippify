@@ -45,9 +45,9 @@ const Main = () => {
 			editorRef.current.getValue() &&
 			editorRef.current.getValue() !== content
 		) {
-			dispatch(actions.saveSnippet(editorRef.current.getValue())).then(
-				result => console.log(result)
-			)
+			dispatch(
+				actions.saveSnippet(editorRef.current.getValue())
+			).then(result => console.log(result))
 		}
 	}
 
